@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import ErrorWarning from './ErrorWarning.jsx'
 import moment from 'moment'
 
 const showReceipt = (code, timestamp, receipt) => {
@@ -7,15 +8,22 @@ const showReceipt = (code, timestamp, receipt) => {
   return (
     <div className="usa-alert usa-alert-success">
       <div className="usa-alert-body">
-        <h3 className="usa-alert-heading">Submission signed.</h3>
-        <p className="usa-alert-text">You have signed your submission on <strong>{moment().utcOffset(-5).calendar(timestamp)}</strong>. Your receipt # is <strong>{receipt}</strong>.</p>
+        <h3 className="usa-alert-heading">HMDA data submitted</h3>
+        <p className="usa-alert-text">You have submitted your HMDA data on <strong>{moment(timestamp).format('MMMM Do, YYYY, h:mm:ss')}</strong>. Your receipt number is <strong>{receipt}</strong>.</p>
       </div>
     </div>
   )
 }
 
-const showWarning = (code) => {
-  if(code > 8) return null
+const showWarning = (props) => {
+  if(!props.error && props.status.code > 8) return null
+
+  if(props.error) return (
+    <ErrorWarning
+      error={props.error}
+      bodyText="You cannot sign your submission if you have encountered an error in the filing process. Please refresh the page or try again later."
+    />
+  )
 
   return (
     <div className="usa-alert usa-alert-warning">
@@ -28,29 +36,35 @@ const showWarning = (code) => {
 }
 
 const Signature = (props) => {
-  // if code greater than 8 (validated) and not 12 (signed), enable the checkbox
-  const isDisabled = (props.status.code > 8 && props.status.code !== 11) ? false : true
+  // if code greater than 8 (validated) and not 11 (signed), enable the checkbox
+  let isDisabled = (props.status.code > 8 && props.status.code !== 11) ? false : true
 
   let buttonClass = 'usa-button-disabled'
   // if the checkbox is checked remove disabled from button
   if(props.checked) {
     buttonClass = ''
   }
-  // if code is 12 (signed), disable button again
+  // if code is 11 (signed), disable button again
   if(props.status.code === 11) {
     buttonClass = 'usa-button-disabled'
   }
 
-  const headingClass = props.status.code === 11 ? 'text-green' : 'text-secondary'
+  // if an error has occurred, disable both checkbox and button
+  if(props.error) {
+    isDisabled = true
+    buttonClass = 'usa-button-disabled'
+  }
+
+  const headingClass = props.status.code === 11 && !props.error ? 'text-green' : 'text-secondary'
 
   return (
     <div className="Signature" id="signature">
       <header>
         <h2 className={headingClass}>Signature</h2>
-        <p className="usa-font-lead">To complete your submission first check the checkbox to certify accuracy and then click the button to sign.</p>
+        <p className="usa-font-lead">To complete your submission, select the checkbox to certify to the accuracy and completeness of the data submitted. Then, select the "Submit HMDA data" button to submit your data.</p>
       </header>
 
-      {showWarning(props.status.code)}
+      {showWarning(props)}
 
       <ul className="usa-unstyled-list">
         <li>
@@ -68,7 +82,7 @@ const Signature = (props) => {
       <button
         className={buttonClass}
         onClick={e => props.onSignatureClick(props.checked)}>
-        Sign the submission
+        Submit HMDA data
       </button>
 
       {showReceipt(props.status.code, props.timestamp, props.receipt)}
