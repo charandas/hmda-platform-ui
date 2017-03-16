@@ -268,8 +268,8 @@ export function fetchIRS() {
         dispatch(receiveIRS(json))
         dispatch(updateStatus(
           {
-            code: json.status.code,
-            message: json.status.message
+            code: 10,
+            message: 'IRS report generated'
           }
         ))
       })
@@ -325,8 +325,8 @@ export function fetchSignature() {
         dispatch(receiveSignature(json))
         dispatch(updateStatus(
           {
-            code: json.status.code,
-            message: json.status.message
+            code: 10,
+            message: 'IRS report generated'
           }
         ))
       })
@@ -343,8 +343,8 @@ export function updateSignature(signed) {
         dispatch(receiveSignaturePost(json))
         dispatch(updateStatus(
           {
-            code: json.status.code,
-            message: json.status.message
+            code: 11,
+            message: 'signed'
           }
         ))
       })
