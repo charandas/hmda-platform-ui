@@ -281,13 +281,7 @@ export function fetchIRS() {
     return getIRS(latestSubmissionId)
       .then(json => {
         if(hasHttpError(json)) throw new Error(JSON.stringify(dispatch(receiveError(json))))
-        dispatch(receiveIRS(json))
-        return dispatch(updateStatus(
-          {
-            code: 10,
-            message: 'IRS report generated'
-          }
-        ))
+        return dispatch(receiveIRS(json))
       })
       .catch(err => console.error(err))
   }
