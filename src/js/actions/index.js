@@ -287,7 +287,13 @@ export function fetchIRS() {
     return getIRS(latestSubmissionId)
       .then(json => {
         if(hasHttpError(json)) throw new Error(JSON.stringify(dispatch(receiveError(json))))
-        return dispatch(receiveIRS(json))
+        dispatch(receiveIRS(json))
+        return dispatch(updateStatus(
+          {
+            code: 9,
+            message: 'validated'
+          }
+        ))
       })
       .catch(err => console.error(err))
   }
@@ -341,8 +347,8 @@ export function fetchSignature() {
         dispatch(receiveSignature(json))
         return dispatch(updateStatus(
           {
-            code: 10,
-            message: 'IRS report generated'
+            code: json.status.code,
+            message: json.status.message
           }
         ))
       })
@@ -359,8 +365,8 @@ export function updateSignature(signed) {
         dispatch(receiveSignaturePost(json))
         return dispatch(updateStatus(
           {
-            code: 11,
-            message: 'signed'
+            code: json.status.code,
+            message: json.status.message
           }
         ))
       })
