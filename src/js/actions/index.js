@@ -347,8 +347,8 @@ export function fetchSignature() {
         dispatch(receiveSignature(json))
         return dispatch(updateStatus(
           {
-            code: json.status.code,
-            message: json.status.message
+            code: 9,
+            message: 'validated'
           }
         ))
       })
