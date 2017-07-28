@@ -209,6 +209,12 @@ export default class Institution extends Component {
                     (filingObj.submissions[0] &&
                       filingObj.submissions[0].status) ||
                     null
+                  let latestSubmissionCode
+                  if(!latestSubmissionStatus || !latestSubmissionStatus.code) {
+                    latestSubmissionCode = 0
+                  } else {
+                    latestSubmissionCode = latestSubmissionStatus.code
+                  }
                   const institution = getInstitutionFromFiling(
                     institutions,
                     filing
@@ -229,7 +235,7 @@ export default class Institution extends Component {
                           )}
 
                           {renderViewButton(
-                            latestSubmissionStatus.code,
+                            latestSubmissionCode,
                             filing.institutionId,
                             filing.period
                           )}
