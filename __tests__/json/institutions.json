@@ -2,7 +2,7 @@
   "institutions": [
     {
       "name": "Bank 0",
-      "id": "0"
+      "id": "3"
     },
     {
       "name": "Bank 1",
@@ -14,7 +14,7 @@
     },
     {
       "name": "Bank 3",
-      "id": "3"
+      "id": "0"
     }
   ]
 }
